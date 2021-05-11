@@ -4,4 +4,6 @@
 ![potato](https://github.com/mbridak/potato/raw/main/pic/potato.png)
 Pulls latest POTA spots. Displays them in a compact interface. If you have an instance of `rigctld` running, when you click on a spot your radio will automatically tune to the spotted frequency.
 
+If you use Linux you can download the binary [here](https://github.com/mbridak/potato/releases/download/21.5.11/potato)
+
 ![screenshot](https://github.com/mbridak/potato/raw/main/pic/screenshot.png)
