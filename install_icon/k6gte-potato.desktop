@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=potato
+StartupWMClass=potato
+GenericName=K6GTE potato
+Comment=Amateur Radio Communications
+Exec=potato
+Icon=k6gte-potato
+Terminal=false
+Type=Application
+Categories=HamRadio;
