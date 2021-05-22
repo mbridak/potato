@@ -8,12 +8,16 @@ class MainWindow(QtWidgets.QMainWindow):
     potaurl="https://api.pota.us/spot/activator"
     rigctld_addr = "127.0.0.1"
     rigctld_port = 4532
+    bw = {}
 
     def __init__(self, parent=None):
         super().__init__(parent)
         uic.loadUi(self.relpath("dialog.ui"), self)
         self.listWidget.clicked.connect(self.spotclicked)
-        pass
+        self.bw['LSB'] = '2400'
+        self.bw['USB'] = '2400'
+        self.bw['FM'] = '15000'
+        self.bw['CW'] = '200'
 
     def relpath(self, filename):
         try:
@@ -51,13 +55,20 @@ class MainWindow(QtWidgets.QMainWindow):
         try:
             item = self.listWidget.currentItem()
             line = item.text().split()
-            print(line)
             freq = line[3]
+            mode = line[4].upper()
             combfreq = freq+"000"
             radiosocket = socket.socket()
             radiosocket.settimeout(0.1)
             radiosocket.connect((self.rigctld_addr, self.rigctld_port))
             command = 'F'+combfreq+'\n'
+            radiosocket.send(command.encode('ascii'))
+            if mode == 'SSB':
+                if int(combfreq) > 10000000:
+                    mode = 'USB'
+                else:
+                    mode = 'LSB'
+            command = 'M '+mode+ ' ' + self.bw[mode] + '\n'
             radiosocket.send(command.encode('ascii'))
             radiosocket.shutdown(socket.SHUT_RDWR)
             radiosocket.close()
