@@ -9,6 +9,7 @@ class MainWindow(QtWidgets.QMainWindow):
     rigctld_addr = "127.0.0.1"
     rigctld_port = 4532
     bw = {}
+    lastclicked = ""
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -44,6 +45,9 @@ class MainWindow(QtWidgets.QMainWindow):
             summit = f"{i['associationCode'].rjust(3)}/{i['summitCode'].rjust(6)}" # {i['summitDetails']}
             """
             self.listWidget.addItem(spot)
+            if spot[5:] == self.lastclicked[5:]:
+                founditem = self.listWidget.findItems(spot[5:], QtCore.Qt.MatchFlag.MatchContains)
+                founditem[0].setSelected(True)
             
 
     def spotclicked(self):
@@ -55,6 +59,7 @@ class MainWindow(QtWidgets.QMainWindow):
         try:
             item = self.listWidget.currentItem()
             line = item.text().split()
+            self.lastclicked = item.text()
             freq = line[3]
             mode = line[4].upper()
             combfreq = freq+"000"
