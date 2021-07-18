@@ -15,10 +15,6 @@ class MainWindow(QtWidgets.QMainWindow):
         super().__init__(parent)
         uic.loadUi(self.relpath("dialog.ui"), self)
         self.listWidget.clicked.connect(self.spotclicked)
-        self.bw['LSB'] = '2400'
-        self.bw['USB'] = '2400'
-        self.bw['FM'] = '15000'
-        self.bw['CW'] = '200'
 
     def relpath(self, filename):
         try:
@@ -36,14 +32,6 @@ class MainWindow(QtWidgets.QMainWindow):
 
         for i in spots:
             spot=f"{i['spotTime'].split('T')[1][0:5]} {i['activator'].rjust(10)} {i['reference'].ljust(7)} {i['frequency'].split('.')[0].rjust(5)} {i['mode']}"
-            """
-            i['activatorCallsign']=i['activatorCallsign'].replace("\n", "").upper()
-            i['activatorCallsign']=i['activatorCallsign'].replace(" ", "")
-            if i['activatorCallsign'] in justonce:
-                continue
-            justonce.append(i['activatorCallsign'])
-            summit = f"{i['associationCode'].rjust(3)}/{i['summitCode'].rjust(6)}" # {i['summitDetails']}
-            """
             self.listWidget.addItem(spot)
             if spot[5:] == self.lastclicked[5:]:
                 founditem = self.listWidget.findItems(spot[5:], QtCore.Qt.MatchFlag.MatchContains)
@@ -52,7 +40,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def spotclicked(self):
         """
-        If rigctld is running on this PC, tell it to tune to the spot freq.
+        If rigctld is running on this PC, tell it to tune to the spot freq and change mode.
         Otherwise die gracefully.
         """
 
@@ -73,7 +61,7 @@ class MainWindow(QtWidgets.QMainWindow):
                     mode = 'USB'
                 else:
                     mode = 'LSB'
-            command = 'M '+mode+ ' ' + self.bw[mode] + '\n'
+            command = 'M '+mode+ ' 0\n'
             radiosocket.send(command.encode('ascii'))
             radiosocket.shutdown(socket.SHUT_RDWR)
             radiosocket.close()
