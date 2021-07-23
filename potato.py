@@ -15,6 +15,10 @@ class MainWindow(QtWidgets.QMainWindow):
         super().__init__(parent)
         uic.loadUi(self.relpath("dialog.ui"), self)
         self.listWidget.clicked.connect(self.spotclicked)
+        self.bw['LSB'] = '2400'
+        self.bw['USB'] = '2400'
+        self.bw['FM'] = '15000'
+        self.bw['CW'] = '200'
 
     def relpath(self, filename):
         try:
@@ -61,7 +65,7 @@ class MainWindow(QtWidgets.QMainWindow):
                     mode = 'USB'
                 else:
                     mode = 'LSB'
-            command = 'M '+mode+ ' 0\n'
+            command = 'M '+mode+ ' ' + self.bw[mode] + '\n'
             radiosocket.send(command.encode('ascii'))
             radiosocket.shutdown(socket.SHUT_RDWR)
             radiosocket.close()
