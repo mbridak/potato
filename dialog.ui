@@ -43,10 +43,108 @@ color: rgb(211, 215, 207);</string>
          </spacer>
         </item>
         <item>
+         <widget class="QComboBox" name="comboBox_band">
+          <item>
+           <property name="text">
+            <string>All</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>2</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>6</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>10</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>12</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>15</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>17</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>20</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>30</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>40</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>60</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>80</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>160</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item>
          <widget class="QLabel" name="time">
           <property name="text">
-           <string/>
+           <string>00:00</string>
           </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="comboBox_mode">
+          <item>
+           <property name="text">
+            <string>All</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>CW</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>SSB</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>FT8</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>FT4</string>
+           </property>
+          </item>
          </widget>
         </item>
         <item>
