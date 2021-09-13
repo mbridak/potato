@@ -127,6 +127,11 @@ color: rgb(211, 215, 207);</string>
           </item>
           <item>
            <property name="text">
+            <string>-FT*</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
             <string>CW</string>
            </property>
           </item>

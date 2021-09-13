@@ -37,8 +37,12 @@ class MainWindow(QtWidgets.QMainWindow):
         justonce=[]
 
         for i in spots:
-            if self.comboBox_mode.currentText() == 'All' or i['mode'] == self.comboBox_mode.currentText():
-                if self.comboBox_band.currentText() == 'All' or self.getband(i['frequency'].split('.')[0]) == self.comboBox_band.currentText():
+            modeSelection = self.comboBox_mode.currentText()
+            if modeSelection == '-FT*' and i['mode'][:2] == 'FT':
+                continue
+            if modeSelection == 'All' or modeSelection == '-FT*' or i['mode'] == modeSelection:
+                bandSelection = self.comboBox_band.currentText()
+                if bandSelection == 'All' or self.getband(i['frequency'].split('.')[0]) == bandSelection:
                     spot=f"{i['spotTime'].split('T')[1][0:5]} {i['activator'].rjust(10)} {i['reference'].ljust(7)} {i['frequency'].split('.')[0].rjust(5)} {i['mode']}"
                     self.listWidget.addItem(spot)
                     if spot[5:] == self.lastclicked[5:]:
