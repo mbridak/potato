@@ -43,6 +43,9 @@ class MainWindow(QtWidgets.QMainWindow):
         except requests.exceptions.HTTPError as e:
             self.listWidget.addItem("HTTP Error: {e}")
             return
+        except requests.exceptions.RequestException as e:
+            self.listWidget.addItem("Error: {e}")
+            return
         spots = json.loads(request.text)
         self.listWidget.clear()
         justonce=[]
