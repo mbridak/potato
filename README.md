@@ -6,7 +6,7 @@
 Pulls latest POTA spots. Displays them in a compact interface. If you have an instance of `rigctld` running, when you click on a spot your radio will automatically tune to the spotted frequency and change modes to match the spot.   Filter output to band and or mode.
 <br/>
 
-If you use Linux you can try the binary [here](https://github.com/mbridak/potato/releases/download/21.7.25/potato).
+If you use Linux you can try the binary [here](https://github.com/mbridak/potato/releases/download/21.9.14/potato).
 
 Or, if you don't run the same version of Linux as the package is built against.
 
