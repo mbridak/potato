@@ -31,7 +31,18 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def getspots(self):
         self.time.setText(str(datetime.now(timezone.utc)).split()[1].split(".")[0][0:5])
-        request=requests.get(self.potaurl,timeout=15.0)
+        try:
+            request=requests.get(self.potaurl,timeout=15.0)
+            request.raise_for_status()
+        except requests.ConnectionError as e:
+            self.listWidget.addItem(f"Network Error: {e}")
+            return
+        except requests.exceptions.Timeout as e:
+            self.listWidget.addItem("Timeout Error: {e}")
+            return
+        except requests.exceptions.HTTPError as e:
+            self.listWidget.addItem("HTTP Error: {e}")
+            return
         spots = json.loads(request.text)
         self.listWidget.clear()
         justonce=[]
