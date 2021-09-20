@@ -124,12 +124,16 @@ class MainWindow(QtWidgets.QMainWindow):
         else:
             return "0"
 
-app = QtWidgets.QApplication(sys.argv)
-app.setStyle('Fusion')
-window = MainWindow()
-window.show()
-window.getspots()
-timer = QtCore.QTimer()
-timer.timeout.connect(window.getspots)
-timer.start(30000)
-app.exec()
+def main():
+    app = QtWidgets.QApplication(sys.argv)
+    app.setStyle('Fusion')
+    window = MainWindow()
+    window.show()
+    window.getspots()
+    timer = QtCore.QTimer()
+    timer.timeout.connect(window.getspots)
+    timer.start(30000)
+    app.exec()
+
+if __name__ == "__main__":
+    main()
