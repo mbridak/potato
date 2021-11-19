@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-import requests, sys, os, socket, json
-from PyQt5 import QtCore, QtWidgets
-from PyQt5 import uic
+import requests, sys, os, socket
+from PyQt5 import QtCore, QtWidgets, uic
 from datetime import datetime,timezone
+from json import loads
 
 class MainWindow(QtWidgets.QMainWindow):
     potaurl="https://api.pota.us/spot/activator"
@@ -46,10 +46,9 @@ class MainWindow(QtWidgets.QMainWindow):
         except requests.exceptions.RequestException as e:
             self.listWidget.addItem("Error: {e}")
             return
-        spots = json.loads(request.text)
+        spots = loads(request.text)
         self.listWidget.clear()
         justonce=[]
-
         for i in spots:
             modeSelection = self.comboBox_mode.currentText()
             if modeSelection == '-FT*' and i['mode'][:2] == 'FT':
