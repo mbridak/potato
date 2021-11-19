@@ -12,6 +12,10 @@ Or, if you don't run the same version of Linux as the package is built against.
 
 `python3 -m pip3 install -r requirements.txt`
 
+Or if you're the Ubuntu/Debian type you can:
+
+`sudo apt install python3-pyqt5 python3-requests`
+
 Then, run the program from source.
 
 `./potato.py`
