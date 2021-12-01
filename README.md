@@ -20,9 +20,20 @@ Then, run the program from source.
 
 `./potato.py`
 
+![screenshot](pic/screenshot.png)
 
+## Building a binary executable
 
-![screenshot](https://github.com/mbridak/potato/raw/main/pic/screenshot.png)
+I've included a .spec file in case you wished to create your own binary from the source. To use it, first install pyinstaller.
+
+`python3 -m pip3 install pyinstaller`
+
+The build the binary.
+
+`pyinstaller -F potato.spec`
+
+Look in the newly created dist directory to find your binary.
+
 
 ## rigctld and default filter widths
 
