@@ -8,7 +8,7 @@ Pulls latest POTA spots. Displays them in a compact interface. If you have an in
 
 If you use Linux you can try the binary [here](https://github.com/mbridak/potato/releases/download/21.9.14/potato).
 
-Or, if you don't run the same version of Linux as the package is built against.
+If you don't run the same version of Linux as the package is built against, or you use a Raspberry Pi or run Windows. You can run it from source. You can even build your own binary. All the cool kids are doing it.
 
 `python3 -m pip3 install -r requirements.txt`
 
@@ -18,7 +18,7 @@ Or if you're the Ubuntu/Debian type you can:
 
 Then, run the program from source.
 
-`./potato.py`
+`python3 potato.py`
 
 ![screenshot](pic/screenshot.png)
 
@@ -28,7 +28,7 @@ I've included a .spec file in case you wished to create your own binary from the
 
 `python3 -m pip3 install pyinstaller`
 
-The build the binary.
+Then build the binary.
 
 `pyinstaller -F potato.spec`
 
