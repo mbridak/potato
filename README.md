@@ -10,6 +10,8 @@ If you use Linux you can try the binary [here](https://github.com/mbridak/potato
 
 If you don't run the same version of Linux as the package is built against, or you use a Raspberry Pi or run Windows. You can run it from source. You can even build your own binary. All the cool kids are doing it.
 
+First install the requirements.
+
 `python3 -m pip3 install -r requirements.txt`
 
 Or if you're the Ubuntu/Debian type you can:
