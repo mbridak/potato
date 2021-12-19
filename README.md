@@ -2,13 +2,18 @@
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)  [![Python: 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)  [![Made With:PyQt5](https://img.shields.io/badge/Made%20with-PyQt5-red)](https://pypi.org/project/PyQt5/)
 
-<img src="https://github.com/mbridak/potato/raw/main/pic/potato.png" width="100">
-Pulls latest POTA spots. Displays them in a compact interface. If you have an instance of `rigctld` running, when you click on a spot your radio will automatically tune to the spotted frequency and change modes to match the spot.   Filter output to band and or mode.
-<br/>
+<img src="https://github.com/mbridak/potato/raw/main/pic/potato.png" width="100"/>
+Pulls latest POTA spots. Displays them in a compact interface. If you have an instance of `flrig` running, when you click on a spot your radio will automatically tune to the spotted frequency and change modes to match the spot.   Filter output to band and or mode.
 
-If you use Linux you can try the binary [here](https://github.com/mbridak/potato/releases/download/21.9.14/potato).
+## Changes since 21.9.14 Latka
 
-If you don't run the same version of Linux as the package is built against, or you use a Raspberry Pi or run Windows. You can run it from source. You can even build your own binary. All the cool kids are doing it.
+I ditched using the rigctld daemon supplied by hamlib tools. Instead I'll be using the [flrig's](http://w1hkj.com/files/flrig/) XmlRPC interface. It's way simpler. It's available on all platforms.
+
+For Debian based Linux or Raspberry OS you can:
+
+`sudo apt install flrig`
+
+## Running from source
 
 First install the requirements.
 
@@ -35,16 +40,3 @@ Then build the binary.
 `pyinstaller -F potato.spec`
 
 Look in the newly created dist directory to find your binary.
-
-
-## rigctld and default filter widths
-
-For some reason rigctld changes the filter width when you set the mode. When you send a filter width of 0 rigctld sets the modes filter width to 'hamlibs backend default'. I'm not a big fan of their CW default, and found it rather annoying to have too change the filter on the radio after each click a spot. So I put back in the hard coded defaults. I'm not sure why we're not able to just change the mode and leave the filters alone.
-
-In short untill I add a settings dialog to change the defaults you can change your own by editing the source.
-
-        self.bw['LSB'] = '2400'
-        self.bw['USB'] = '2400'
-        self.bw['FM'] = '15000'
-        self.bw['CW'] = '200'
-        
