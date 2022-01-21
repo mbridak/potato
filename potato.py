@@ -26,7 +26,7 @@ def load_fonts_from_dir(directory):
 		return families
 
 class MainWindow(QtWidgets.QMainWindow):
-    potaurl="https://api.pota.us/spot/activator"
+    potaurl="https://api.pota.app/spot/activator"
     rigctld_addr = "127.0.0.1"
     rigctld_port = 4532
     bw = {}
