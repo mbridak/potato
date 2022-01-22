@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import logging
+
 logging.basicConfig(level=logging.WARNING)
 
 import xmlrpc.client
@@ -8,25 +9,28 @@ import requests, sys, os
 from PyQt5 import QtCore, QtWidgets, uic
 from PyQt5.QtCore import QDir
 from PyQt5.QtGui import QFontDatabase
-from datetime import datetime,timezone
+from datetime import datetime, timezone
 from json import loads
 
+
 def relpath(filename):
-		try:
-			base_path = sys._MEIPASS # pylint: disable=no-member
-		except:
-			base_path = os.path.abspath(".")
-		return os.path.join(base_path, filename)
+    try:
+        base_path = sys._MEIPASS  # pylint: disable=no-member
+    except:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, filename)
+
 
 def load_fonts_from_dir(directory):
-		families = set()
-		for fi in QDir(directory).entryInfoList(["*.ttf", "*.woff", "*.woff2"]):
-			_id = QFontDatabase.addApplicationFont(fi.absoluteFilePath())
-			families |= set(QFontDatabase.applicationFontFamilies(_id))
-		return families
+    families = set()
+    for fi in QDir(directory).entryInfoList(["*.ttf", "*.woff", "*.woff2"]):
+        _id = QFontDatabase.addApplicationFont(fi.absoluteFilePath())
+        families |= set(QFontDatabase.applicationFontFamilies(_id))
+    return families
+
 
 class MainWindow(QtWidgets.QMainWindow):
-    potaurl="https://api.pota.app/spot/activator"
+    potaurl = "https://api.pota.app/spot/activator"
     rigctld_addr = "127.0.0.1"
     rigctld_port = 4532
     bw = {}
@@ -42,7 +46,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def relpath(self, filename):
         try:
-            base_path = sys._MEIPASS # pylint: disable=no-member
+            base_path = sys._MEIPASS  # pylint: disable=no-member
         except:
             base_path = os.path.abspath(".")
         return os.path.join(base_path, filename)
@@ -50,7 +54,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def getspots(self):
         self.time.setText(str(datetime.now(timezone.utc)).split()[1].split(".")[0][0:5])
         try:
-            request=requests.get(self.potaurl,timeout=15.0)
+            request = requests.get(self.potaurl, timeout=15.0)
             request.raise_for_status()
         except requests.ConnectionError as e:
             self.listWidget.addItem(f"Network Error: {e}")
@@ -66,24 +70,32 @@ class MainWindow(QtWidgets.QMainWindow):
             return
         spots = loads(request.text)
         self.listWidget.clear()
-        justonce=[]
+        justonce = []
         for i in spots:
             modeSelection = self.comboBox_mode.currentText()
-            if modeSelection == '-FT*' and i['mode'][:2] == 'FT':
+            if modeSelection == "-FT*" and i["mode"][:2] == "FT":
                 continue
-            if modeSelection == 'All' or modeSelection == '-FT*' or i['mode'] == modeSelection:
+            if (
+                modeSelection == "All"
+                or modeSelection == "-FT*"
+                or i["mode"] == modeSelection
+            ):
                 bandSelection = self.comboBox_band.currentText()
-                if bandSelection == 'All' or self.getband(i['frequency'].split('.')[0]) == bandSelection:
-                    spot=f"{i['spotTime'].split('T')[1][0:5]} {i['activator'].rjust(10)} {i['reference'].ljust(7)} {i['frequency'].split('.')[0].rjust(5)} {i['mode']}"
+                if (
+                    bandSelection == "All"
+                    or self.getband(i["frequency"].split(".")[0]) == bandSelection
+                ):
+                    spot = f"{i['spotTime'].split('T')[1][0:5]} {i['activator'].rjust(10)} {i['reference'].ljust(7)} {i['frequency'].split('.')[0].rjust(5)} {i['mode']}"
                     self.listWidget.addItem(spot)
                     if spot[5:] == self.lastclicked[5:]:
-                        founditem = self.listWidget.findItems(spot[5:], QtCore.Qt.MatchFlag.MatchContains)
+                        founditem = self.listWidget.findItems(
+                            spot[5:], QtCore.Qt.MatchFlag.MatchContains
+                        )
                         founditem[0].setSelected(True)
-            
 
     def spotclicked(self):
         """
-        If rigctld is running on this PC, tell it to tune to the spot freq and change mode.
+        If flrig is running on this PC, tell it to tune to the spot freq and change mode.
         Otherwise die gracefully.
         """
 
@@ -93,20 +105,20 @@ class MainWindow(QtWidgets.QMainWindow):
             self.lastclicked = item.text()
             freq = line[3]
             mode = line[4].upper()
-            combfreq = freq+"000"
+            combfreq = freq + "000"
             self.server.rig.set_frequency(float(combfreq))
-            if mode == 'SSB':
+            if mode == "SSB":
                 if int(combfreq) > 10000000:
-                    mode = 'USB'
+                    mode = "USB"
                 else:
-                    mode = 'LSB'
+                    mode = "LSB"
             self.server.rig.set_mode(mode)
         except:
-            pass 
+            pass
 
     def getband(self, freq):
         if freq.isnumeric():
-            frequency = int(float(freq))*1000
+            frequency = int(float(freq)) * 1000
             if frequency > 1800000 and frequency < 2000000:
                 return "160"
             if frequency > 3500000 and frequency < 4000000:
@@ -134,9 +146,10 @@ class MainWindow(QtWidgets.QMainWindow):
         else:
             return "0"
 
+
 def main():
     app = QtWidgets.QApplication(sys.argv)
-    app.setStyle('Fusion')
+    app.setStyle("Fusion")
     font_dir = relpath("font")
     families = load_fonts_from_dir(os.fspath(font_dir))
     logging.info(families)
@@ -147,6 +160,7 @@ def main():
     timer.timeout.connect(window.getspots)
     timer.start(30000)
     app.exec()
+
 
 if __name__ == "__main__":
     main()
