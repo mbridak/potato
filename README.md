@@ -13,6 +13,8 @@ For Debian based Linux or Raspberry OS you can:
 
 `sudo apt install flrig`
 
+Merged PR from @jon-laudner changing the API address since the legacy one was deprecated.
+
 ## Running from source
 
 First install the requirements.
@@ -40,3 +42,6 @@ Then build the binary.
 `pyinstaller -F potato.spec`
 
 Look in the newly created dist directory to find your binary.
+
+Or execute the install.sh shell script in the install_icon folder to copy the binary from the dist directory to your ~/.local/bin folder and install a launcher icon.
+ 
