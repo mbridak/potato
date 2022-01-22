@@ -13,7 +13,7 @@ For Debian based Linux or Raspberry OS you can:
 
 `sudo apt install flrig`
 
-Merged PR from @jon-laudner changing the API address since the legacy one was deprecated.
+Merged PR from [jon-laudner](https://github.com/jon-laudner) changing the API address since the legacy one was deprecated.
 
 ## Running from source
 
