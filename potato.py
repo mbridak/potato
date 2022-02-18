@@ -2,6 +2,7 @@
 
 import logging
 
+
 logging.basicConfig(level=logging.WARNING)
 
 import xmlrpc.client
@@ -11,6 +12,9 @@ from PyQt5.QtCore import QDir
 from PyQt5.QtGui import QFontDatabase
 from datetime import datetime, timezone
 from json import loads
+import psutil
+import re
+
 
 
 def relpath(filename):
@@ -35,11 +39,21 @@ class MainWindow(QtWidgets.QMainWindow):
     rigctld_port = 4532
     bw = {}
     lastclicked = ""
+    
+    
 
     def __init__(self, parent=None):
+        isflrunning = self.checkflrun()
         super().__init__(parent)
         uic.loadUi(self.relpath("dialog.ui"), self)
-        #self.listWidget.clicked.connect(self.spotclicked)
+        
+        if isflrunning == True:
+            print("flrig is running")
+            self.listWidget.clicked.connect(self.spotclicked)
+            
+        else:
+            print("flrig is not running")
+        
         self.comboBox_mode.currentTextChanged.connect(self.getspots)
         self.comboBox_band.currentTextChanged.connect(self.getspots)
         self.server = xmlrpc.client.ServerProxy("http://localhost:12345")
@@ -93,28 +107,28 @@ class MainWindow(QtWidgets.QMainWindow):
                         )
                         founditem[0].setSelected(True)
 
-    # def spotclicked(self):
-    #     """
-    #     If flrig is running on this PC, tell it to tune to the spot freq and change mode.
-    #     Otherwise die gracefully.
-    #     """
+    def spotclicked(self):
+        """
+        If flrig is running on this PC, tell it to tune to the spot freq and change mode.
+        Otherwise die gracefully.
+        """
 
-    #     try:
-    #         item = self.listWidget.currentItem()
-    #         line = item.text().split()
-    #         self.lastclicked = item.text()
-    #         freq = line[3]
-    #         mode = line[4].upper()
-    #         combfreq = freq + "000"
-    #         self.server.rig.set_frequency(float(combfreq))
-    #         if mode == "SSB":
-    #             if int(combfreq) > 10000000:
-    #                 mode = "USB"
-    #             else:
-    #                 mode = "LSB"
-    #         self.server.rig.set_mode(mode)
-    #     except:
-    #         pass
+        try:
+            item = self.listWidget.currentItem()
+            line = item.text().split()
+            self.lastclicked = item.text()
+            freq = line[3]
+            mode = line[4].upper()
+            combfreq = freq + "000"
+            self.server.rig.set_frequency(float(combfreq))
+            if mode == "SSB":
+                if int(combfreq) > 10000000:
+                    mode = "USB"
+                else:
+                    mode = "LSB"
+            self.server.rig.set_mode(mode)
+        except:
+            pass
 
     def getband(self, freq):
         if freq.isnumeric():
@@ -147,7 +161,23 @@ class MainWindow(QtWidgets.QMainWindow):
             return "0"
 
 
+    def checkflrun(self):
+        reg = "flrig"
+        found = False
+    
+        for proc in psutil.process_iter():
+            if found == False:
+                if bool(re.match(reg, proc.name().lower())):
+                    found = True
+                    return True
+
+                    
+
+
 def main():
+
+    
+       
     app = QtWidgets.QApplication(sys.argv)
     app.setStyle("Fusion")
     font_dir = relpath("font")
