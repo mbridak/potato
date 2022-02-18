@@ -39,7 +39,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
         uic.loadUi(self.relpath("dialog.ui"), self)
-        self.listWidget.clicked.connect(self.spotclicked)
+        #self.listWidget.clicked.connect(self.spotclicked)
         self.comboBox_mode.currentTextChanged.connect(self.getspots)
         self.comboBox_band.currentTextChanged.connect(self.getspots)
         self.server = xmlrpc.client.ServerProxy("http://localhost:12345")
@@ -93,28 +93,28 @@ class MainWindow(QtWidgets.QMainWindow):
                         )
                         founditem[0].setSelected(True)
 
-    def spotclicked(self):
-        """
-        If flrig is running on this PC, tell it to tune to the spot freq and change mode.
-        Otherwise die gracefully.
-        """
+    # def spotclicked(self):
+    #     """
+    #     If flrig is running on this PC, tell it to tune to the spot freq and change mode.
+    #     Otherwise die gracefully.
+    #     """
 
-        try:
-            item = self.listWidget.currentItem()
-            line = item.text().split()
-            self.lastclicked = item.text()
-            freq = line[3]
-            mode = line[4].upper()
-            combfreq = freq + "000"
-            self.server.rig.set_frequency(float(combfreq))
-            if mode == "SSB":
-                if int(combfreq) > 10000000:
-                    mode = "USB"
-                else:
-                    mode = "LSB"
-            self.server.rig.set_mode(mode)
-        except:
-            pass
+    #     try:
+    #         item = self.listWidget.currentItem()
+    #         line = item.text().split()
+    #         self.lastclicked = item.text()
+    #         freq = line[3]
+    #         mode = line[4].upper()
+    #         combfreq = freq + "000"
+    #         self.server.rig.set_frequency(float(combfreq))
+    #         if mode == "SSB":
+    #             if int(combfreq) > 10000000:
+    #                 mode = "USB"
+    #             else:
+    #                 mode = "LSB"
+    #         self.server.rig.set_mode(mode)
+    #     except:
+    #         pass
 
     def getband(self, freq):
         if freq.isnumeric():
