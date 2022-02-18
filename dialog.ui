@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>340</width>
-    <height>284</height>
+    <width>450</width>
+    <height>600</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -56,7 +56,7 @@ color: rgb(211, 215, 207);</string>
           </property>
           <item>
            <property name="text">
-            <string>All</string>
+            <string>40</string>
            </property>
           </item>
           <item>
@@ -101,7 +101,7 @@ color: rgb(211, 215, 207);</string>
           </item>
           <item>
            <property name="text">
-            <string>40</string>
+            <string>All</string>
            </property>
           </item>
           <item>
