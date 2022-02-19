@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>450</width>
+    <width>360</width>
     <height>700</height>
    </rect>
   </property>
@@ -15,6 +15,11 @@
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
+  </property>
+  <property name="font">
+   <font>
+    <pointsize>10</pointsize>
+   </font>
   </property>
   <property name="windowTitle">
    <string>K6GTE POTAto</string>
@@ -34,6 +39,7 @@ color: rgb(211, 215, 207);</string>
           <property name="font">
            <font>
             <family>JetBrains Mono</family>
+            <pointsize>12</pointsize>
            </font>
           </property>
           <property name="orientation">
@@ -52,6 +58,7 @@ color: rgb(211, 215, 207);</string>
           <property name="font">
            <font>
             <family>JetBrains Mono</family>
+            <pointsize>12</pointsize>
            </font>
           </property>
           <item>
@@ -126,6 +133,7 @@ color: rgb(211, 215, 207);</string>
           <property name="font">
            <font>
             <family>JetBrains Mono</family>
+            <pointsize>12</pointsize>
            </font>
           </property>
           <property name="text">
@@ -138,6 +146,7 @@ color: rgb(211, 215, 207);</string>
           <property name="font">
            <font>
             <family>JetBrains Mono</family>
+            <pointsize>12</pointsize>
            </font>
           </property>
           <item>
@@ -177,6 +186,7 @@ color: rgb(211, 215, 207);</string>
           <property name="font">
            <font>
             <family>JetBrains Mono</family>
+            <pointsize>12</pointsize>
            </font>
           </property>
           <property name="orientation">
@@ -197,6 +207,7 @@ color: rgb(211, 215, 207);</string>
         <property name="font">
          <font>
           <family>JetBrains Mono</family>
+          <pointsize>12</pointsize>
          </font>
         </property>
         <property name="focusPolicy">
