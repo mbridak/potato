@@ -10,7 +10,7 @@ import re
 import psutil
 from PyQt5 import QtCore, QtWidgets, uic
 from PyQt5.QtCore import QDir
-from PyQt5.QtGui import QFontDatabase
+from PyQt5.QtGui import QFontDatabase, QBrush, QColor
 import requests
 
 logging.basicConfig(level=logging.WARNING)
@@ -41,10 +41,10 @@ class MainWindow(QtWidgets.QMainWindow):
     """The main window class"""
 
     potaurl = "https://api.pota.app/spot/activator"
-    rigctld_addr = "127.0.0.1"
-    rigctld_port = 4532
     bw = {}
     lastclicked = ""
+    workedlist = []
+    spots = None
 
     def __init__(self, parent=None):
         """Initialize class variables"""
@@ -56,6 +56,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.listWidget.clicked.connect(self.spotclicked)
         else:
             print("flrig is not running")
+        self.listWidget.doubleClicked.connect(self.item_double_clicked)
         self.comboBox_mode.currentTextChanged.connect(self.getspots)
         self.comboBox_band.currentTextChanged.connect(self.getspots)
         self.server = xmlrpc.client.ServerProxy("http://localhost:12345")
@@ -91,9 +92,13 @@ class MainWindow(QtWidgets.QMainWindow):
         except requests.exceptions.RequestException as err:
             self.listWidget.addItem(f"Error: {err}")
             return
-        spots = loads(request.text)
+        self.spots = loads(request.text)
+        self.showspots()
+
+    def showspots(self):
+        """Display spots in a list"""
         self.listWidget.clear()
-        for i in spots:
+        for i in self.spots:
             mode_selection = self.comboBox_mode.currentText()
             if mode_selection == "-FT*" and i["mode"][:2] == "FT":
                 continue
@@ -121,6 +126,12 @@ class MainWindow(QtWidgets.QMainWindow):
                             QtCore.Qt.MatchFlag.MatchContains,  # pylint: disable=no-member
                         )
                         founditem[0].setSelected(True)
+                    if i["activator"] in self.workedlist:
+                        founditem = self.listWidget.findItems(
+                            i["activator"],
+                            QtCore.Qt.MatchFlag.MatchContains,  # pylint: disable=no-member
+                        )
+                        founditem[0].setBackground(QBrush(QColor.fromRgb(0, 128, 0)))
 
     def spotclicked(self):
         """
@@ -145,7 +156,18 @@ class MainWindow(QtWidgets.QMainWindow):
         except:
             pass
 
-    def getband(self, freq):
+    def item_double_clicked(self):
+        """If a list item is double clicked a green highlight will be toggles"""
+        item = self.listWidget.currentItem()
+        line = item.text().split()
+        if line[1] in self.workedlist:
+            self.workedlist.remove(line[1])
+        else:
+            self.workedlist.append(line[1])
+        self.showspots()
+
+    @staticmethod
+    def getband(freq):
         """converts a frequency into a ham band"""
         if freq.isnumeric():
             frequency = int(float(freq)) * 1000
