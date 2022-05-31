@@ -5,19 +5,9 @@
 <img src="https://github.com/mbridak/potato/raw/main/pic/potato.png" width="100"/>
 Pulls latest POTA spots. Displays them in a compact interface. If you have an instance of `flrig` running, when you click on a spot your radio will automatically tune to the spotted frequency and change modes to match the spot.   Filter output to band and or mode. If you double click on a spot(s), spots from that activator will be highlighted green. You can use this keep track of who you have worked. Activators can be toggled off again by double clicking the activator a second time. 
 
-## Changes since 21.9.14 Latka
+## Changes since 22.2.19 Instant Mashed
 
-I ditched using the rigctld daemon supplied by hamlib tools. Instead I'll be using the [flrig's](http://w1hkj.com/files/flrig/) XmlRPC interface. It's way simpler. It's available on all platforms.
-
-For Debian based Linux or Raspberry OS you can:
-
-`sudo apt install flrig`
-
-Merged PR from [jon-laudner](https://github.com/jon-laudner) changing the API address since the legacy one was deprecated.
-
-Merged PR from [adammelancon](https://github.com/adammelancon). Added a check to see if flrig is running, to prevent UI freeze on Windows.
-
-Added a double click to highlight spots from an activator(s). 
+Added command line option to specify flrig server address:port.
 
 ## Running from source
 
