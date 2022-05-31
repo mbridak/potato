@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
 """POTAto helps chasers hunt POTA activators. Find out more about POTA at https://pota.app"""
+
+# pylint: disable=no-name-in-module
+# pylint: disable=c-extension-no-member
+
+import argparse
 import xmlrpc.client
 import sys
 import os
@@ -14,6 +19,23 @@ from PyQt5.QtGui import QFontDatabase, QBrush, QColor
 import requests
 
 logging.basicConfig(level=logging.WARNING)
+
+parser = argparse.ArgumentParser(
+    description="POTAto helps chasers hunt POTA activators. Find out more about POTA at https://pota.app"
+)
+parser.add_argument(
+    "-s",
+    "--server",
+    type=str,
+    help="Enter flrig server:port address. default is localhost:12345",
+)
+
+args = parser.parse_args()
+
+if args.server:
+    server_address = args.server
+else:
+    server_address = "localhost:12345"
 
 
 def relpath(filename):
@@ -48,18 +70,17 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def __init__(self, parent=None):
         """Initialize class variables"""
-        isflrunning = self.checkflrun()
+        isflrunning = self.checkflrun() or server_address != "localhost:12345"
         super().__init__(parent)
         uic.loadUi(self.relpath("dialog.ui"), self)
         if isflrunning is True:
-            print("flrig is running")
             self.listWidget.clicked.connect(self.spotclicked)
         else:
             print("flrig is not running")
         self.listWidget.doubleClicked.connect(self.item_double_clicked)
         self.comboBox_mode.currentTextChanged.connect(self.getspots)
         self.comboBox_band.currentTextChanged.connect(self.getspots)
-        self.server = xmlrpc.client.ServerProxy("http://localhost:12345")
+        self.server = xmlrpc.client.ServerProxy(f"http://{server_address}")
 
     @staticmethod
     def relpath(filename: str) -> str:
@@ -145,7 +166,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.lastclicked = item.text()
             freq = line[3]
             mode = line[4].upper()
-            combfreq = freq + "000"
+            combfreq = f"{freq}000"
             self.server.rig.set_frequency(float(combfreq))
             if mode == "SSB":
                 if int(combfreq) > 10000000:
@@ -153,7 +174,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 else:
                     mode = "LSB"
             self.server.rig.set_mode(mode)
-        except:
+        except ConnectionRefusedError:
             pass
 
     def item_double_clicked(self):
