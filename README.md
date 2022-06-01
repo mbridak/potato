@@ -8,6 +8,9 @@ Pulls latest POTA spots. Displays them in a compact interface. If you have an in
 ## Changes since 22.2.19 Instant Mashed
 
 Added command line option to specify flrig server address:port.
+To use a server not running on your local machine, launch it with either -s or --server, followed by the address and port separated by a colon.
+
+Example: `potato -s 192.168.1.32:12345`
 
 ## Running from source
 
