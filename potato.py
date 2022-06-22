@@ -95,6 +95,10 @@ class MainWindow(QtWidgets.QMainWindow):
             base_path = os.path.abspath(".")
         return os.path.join(base_path, filename)
 
+    def potasort(self, element):
+        """Sort list or dictionary items"""
+        return element["spotId"]
+
     def getspots(self):
         """Gets activator spots from pota.app"""
         self.time.setText(str(datetime.now(timezone.utc)).split()[1].split(".")[0][0:5])
@@ -114,7 +118,9 @@ class MainWindow(QtWidgets.QMainWindow):
             self.listWidget.addItem(f"Error: {err}")
             return
         self.spots = loads(request.text)
-        self.showspots()
+        if self.spots:
+            self.spots.sort(reverse=True, key=self.potasort)
+            self.showspots()
 
     def showspots(self):
         """Display spots in a list"""
