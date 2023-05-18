@@ -3,6 +3,7 @@
 
 # pylint: disable=no-name-in-module
 # pylint: disable=c-extension-no-member
+# pylint: disable=line-too-long
 
 import argparse
 import xmlrpc.client
@@ -33,9 +34,9 @@ parser.add_argument(
 args = parser.parse_args()
 
 if args.server:
-    server_address = args.server
+    SERVER_ADDRESS = args.server
 else:
-    server_address = "localhost:12345"
+    SERVER_ADDRESS = "localhost:12345"
 
 
 def relpath(filename):
@@ -70,7 +71,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def __init__(self, parent=None):
         """Initialize class variables"""
-        isflrunning = self.checkflrun() or server_address != "localhost:12345"
+        isflrunning = self.checkflrun() or SERVER_ADDRESS != "localhost:12345"
         super().__init__(parent)
         uic.loadUi(self.relpath("dialog.ui"), self)
         if isflrunning is True:
@@ -80,7 +81,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.listWidget.doubleClicked.connect(self.item_double_clicked)
         self.comboBox_mode.currentTextChanged.connect(self.getspots)
         self.comboBox_band.currentTextChanged.connect(self.getspots)
-        self.server = xmlrpc.client.ServerProxy(f"http://{server_address}")
+        self.server = xmlrpc.client.ServerProxy(f"http://{SERVER_ADDRESS}")
 
     @staticmethod
     def relpath(filename: str) -> str:
@@ -139,11 +140,13 @@ class MainWindow(QtWidgets.QMainWindow):
                     band_selection == "All"
                     or self.getband(i["frequency"].split(".")[0]) == band_selection
                 ):
+                    freq = str(int(float(i["frequency"]) * 1000))
+
                     spot = (
                         f"{i['spotTime'].split('T')[1][0:5]} "
                         f"{i['activator'].rjust(10)} "
                         f"{i['reference'].ljust(7)} "
-                        f"{i['frequency'].split('.')[0].rjust(6)} "
+                        f"{freq.rjust(9)} "
                         f"{i['mode']}"
                     )
                     self.listWidget.addItem(spot)
@@ -172,15 +175,16 @@ class MainWindow(QtWidgets.QMainWindow):
             self.lastclicked = item.text()
             freq = line[3]
             mode = line[4].upper()
-            combfreq = f"{freq}000"
-            self.server.rig.set_frequency(float(combfreq))
+            self.server.rig.set_frequency(float(freq))
             if mode == "SSB":
-                if int(combfreq) > 10000000:
+                if int(freq) > 10000000:
                     mode = "USB"
                 else:
                     mode = "LSB"
             self.server.rig.set_mode(mode)
         except ConnectionRefusedError:
+            pass
+        except IndexError:
             pass
 
     def item_double_clicked(self):
