@@ -18,6 +18,7 @@ from PyQt5 import QtCore, QtWidgets, uic
 from PyQt5.QtCore import QDir
 from PyQt5.QtGui import QFontDatabase, QBrush, QColor
 import requests
+import pyperclip
 
 logging.basicConfig(level=logging.WARNING)
 
@@ -191,6 +192,7 @@ class MainWindow(QtWidgets.QMainWindow):
         """If a list item is double clicked a green highlight will be toggles"""
         item = self.listWidget.currentItem()
         line = item.text().split()
+        pyperclip.copy(line[1])
         if line[1] in self.workedlist:
             self.workedlist.remove(line[1])
         else:
