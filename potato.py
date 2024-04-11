@@ -147,7 +147,8 @@ class MainWindow(QtWidgets.QMainWindow):
                         f"{i['activator'].rjust(10)} "
                         f"{i['reference'].ljust(7)} "
                         f"{freq.rjust(9)} "
-                        f"{i['mode']}"
+                        f"{i['mode']}  "
+                        f"{i['locationDesc']}"
                     )
                     self.listWidget.addItem(spot)
                     if spot[5:] == self.lastclicked[5:]:
