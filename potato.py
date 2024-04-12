@@ -145,11 +145,11 @@ class MainWindow(QtWidgets.QMainWindow):
                     spot = (
                         f"{i['spotTime'].split('T')[1][0:5]} "
                         f"{i['activator'].rjust(10)} "
-                        f"{i['reference'].ljust(7)} "
-                        f"{freq.rjust(9)} "
-                        f"{i['mode']}  "
-                        f"{i['locationDesc']}, "
-                        f"{i['grid6']}"
+                        f"{i['reference'].ljust(10)}"
+                        f"{freq.rjust(9).rjust(7)} "
+                        f"{i['mode'].ljust(5)} "
+                        f"{i['grid6'].ljust(7)} "
+                        f"{i['locationDesc'].ljust(7)}"
                     )
                     self.listWidget.addItem(spot)
                     if spot[5:] == self.lastclicked[5:]:
