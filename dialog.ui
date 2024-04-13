@@ -191,6 +191,13 @@ color: rgb(211, 215, 207);</string>
          </widget>
         </item>
         <item>
+         <widget class="QLineEdit" name="txtFilter">
+          <property name="toolTip">
+           <string extracomment="Location Filter"/>
+          </property>
+         </widget>
+        </item>
+        <item>
          <spacer name="horizontalSpacer">
           <property name="font">
            <font>
