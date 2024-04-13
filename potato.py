@@ -129,7 +129,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.listWidget.clear()
         for i in self.spots:
             mode_selection = self.comboBox_mode.currentText()
-            if mode_selection == "-FT*" and i["mode"][:2] == "FT":
+            if mode_selection == "-FT*" and not i["mode"][:2] == "FT":
                 continue
             if (
                 mode_selection == "All"
