@@ -179,6 +179,11 @@ color: rgb(211, 215, 207);</string>
             <string>FT4</string>
            </property>
           </item>
+          <item>
+           <property name="text">
+            <string>FM</string>
+           </property>
+          </item>
          </widget>
         </item>
         <item>
