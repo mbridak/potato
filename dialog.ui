@@ -24,6 +24,10 @@
   <property name="windowTitle">
    <string>K6GTE POTAto</string>
   </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>pic/potato.png</normaloff>pic/potato.png</iconset>
+  </property>
   <property name="styleSheet">
    <string notr="true">background-color: rgb(42, 42, 42);
 color: rgb(211, 215, 207);</string>
