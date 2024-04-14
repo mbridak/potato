@@ -230,6 +230,10 @@ class MainWindow(QtWidgets.QMainWindow):
                     mode = "USB"
                 else:
                     mode = "LSB"
+            elif mode == "CW":
+                mode = "CW"
+            else:
+                mode = "USB" # default to USB for digital modes
 
             if self.check_port(SERVER_ADDRESS_FLRIG.split(":")[0], int(SERVER_ADDRESS_FLRIG.split(":")[1])) is True:
                 self.server_flrig.rig.set_mode(mode)
