@@ -112,6 +112,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.listWidget.doubleClicked.connect(self.item_double_clicked)
         self.comboBox_mode.currentTextChanged.connect(self.getspots)
         self.comboBox_band.currentTextChanged.connect(self.getspots)
+        self.txtFilter.textChanged.connect(self.showspots)
         """Set up the flrig XML server interface"""
         self.server_flrig = xmlrpc.client.ServerProxy(f"http://{SERVER_ADDRESS_FLRIG}")
 
@@ -278,7 +279,7 @@ class MainWindow(QtWidgets.QMainWindow):
             pass
 
     def item_double_clicked(self):
-        """If a list item is double clicked a green highlight will be toggles"""
+        """If a list item is double clicked a green highlight will be toggled"""
         item = self.listWidget.currentItem()
         line = item.text().split()
         pyperclip.copy(line[1])
