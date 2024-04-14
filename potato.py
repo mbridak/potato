@@ -19,6 +19,7 @@ from PyQt5.QtCore import QDir
 from PyQt5.QtGui import QFontDatabase, QBrush, QColor
 import requests
 import pyperclip
+import socket
 
 logging.basicConfig(level=logging.WARNING)
 
@@ -26,18 +27,28 @@ parser = argparse.ArgumentParser(
     description="POTAto helps chasers hunt POTA activators. Find out more about POTA at https://pota.app"
 )
 parser.add_argument(
-    "-s",
-    "--server",
+    "--flrig",
     type=str,
-    help="Enter flrig server:port address. default is localhost:12345",
+    help="Enter server:port address. defaults flrig=localhost:12345",
+)
+
+parser.add_argument(
+    "--rigctld",
+    type=str,
+    help="Enter server:port address. defaults rigctld=localhost:4532",
 )
 
 args = parser.parse_args()
 
-if args.server:
-    SERVER_ADDRESS = args.server
+if args.flrig:
+    SERVER_ADDRESS_FLRIG = args.flrig
 else:
-    SERVER_ADDRESS = "localhost:12345"
+    SERVER_ADDRESS_FLRIG = "localhost:12345"
+
+if args.rigctld:
+    SERVER_ADDRESS_RIGCTLD = args.rigctld
+else:
+    SERVER_ADDRESS_RIGCTLD = "localhost:4532"
 
 
 def relpath(filename):
@@ -72,17 +83,27 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def __init__(self, parent=None):
         """Initialize class variables"""
-        isflrunning = self.checkflrun() or SERVER_ADDRESS != "localhost:12345"
+        if self.check_port(SERVER_ADDRESS_FLRIG.split(":")[0], int(SERVER_ADDRESS_FLRIG.split(":")[1])) is True:
+            local_flrig = True
+        else:
+            local_flrig = False
+        
+        if self.check_port(SERVER_ADDRESS_RIGCTLD.split(":")[0], int(SERVER_ADDRESS_RIGCTLD.split(":")[1])) is True:
+            local_rigctld = True
+        else:
+            local_rigctld = False
+        
         super().__init__(parent)
         uic.loadUi(self.relpath("dialog.ui"), self)
-        if isflrunning is True:
+        if local_flrig is True or local_rigctld is True:
             self.listWidget.clicked.connect(self.spotclicked)
         else:
-            print("flrig is not running")
+            print("ERROR: no rig control found!!")
         self.listWidget.doubleClicked.connect(self.item_double_clicked)
         self.comboBox_mode.currentTextChanged.connect(self.getspots)
         self.comboBox_band.currentTextChanged.connect(self.getspots)
-        self.server = xmlrpc.client.ServerProxy(f"http://{SERVER_ADDRESS}")
+        """Set up the flrig XML server interface"""
+        self.server_flrig = xmlrpc.client.ServerProxy(f"http://{SERVER_ADDRESS_FLRIG}")
 
     @staticmethod
     def relpath(filename: str) -> str:
@@ -176,26 +197,47 @@ class MainWindow(QtWidgets.QMainWindow):
                             QtCore.Qt.MatchFlag.MatchContains,  # pylint: disable=no-member
                         )
                         founditem[0].setBackground(QBrush(QColor.fromRgb(0, 128, 0)))
+    
+    def setfreq_rigctl(self, mode, freq):
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # Create a socket (SOCK_STREAM means a TCP socket)
+        sock.connect((SERVER_ADDRESS_RIGCTLD.split(":")[0], int(SERVER_ADDRESS_RIGCTLD.split(":")[1])))
+        
+        build_msg = f"M {mode} 0\n" + f"F {freq}\n"
+        MESSAGE = bytes(build_msg, 'utf-8')
+        sock.sendall(MESSAGE)
+        # Look for the response
+        amount_received = 0
+        amount_expected = 7 #len(message)
+        while amount_received < amount_expected:
+            data = sock.recv(16)
+            amount_received += len(data)
+        sock.close()
+        return data
 
     def spotclicked(self):
         """
-        If flrig is running on this PC, tell it to tune to the spot freq and change mode.
-        Otherwise die gracefully.
+        If rig control is running on this PC, tell it to tune to the spot freq and change mode.
         """
-
         try:
             item = self.listWidget.currentItem()
             line = item.text().split()
             self.lastclicked = item.text()
             freq = line[3]
             mode = line[4].upper()
-            self.server.rig.set_frequency(float(freq))
             if mode == "SSB":
                 if int(freq) > 10000000:
                     mode = "USB"
                 else:
                     mode = "LSB"
-            self.server.rig.set_mode(mode)
+
+            if self.check_port(SERVER_ADDRESS_FLRIG.split(":")[0], int(SERVER_ADDRESS_FLRIG.split(":")[1])) is True:
+                self.server_flrig.rig.set_mode(mode)
+                self.server_flrig.rig.set_frequency(float(freq))
+            elif self.check_port(SERVER_ADDRESS_RIGCTLD.split(":")[0], int(SERVER_ADDRESS_RIGCTLD.split(":")[1])) is True:
+                self.setfreq_rigctl(mode, str(int(freq)))
+            else:
+                print("ERROR: no rig control found!!")
+
         except ConnectionRefusedError:
             pass
         except IndexError:
@@ -243,19 +285,16 @@ class MainWindow(QtWidgets.QMainWindow):
                 return "2"
         else:
             return "0"
-
+        
     @staticmethod
-    def checkflrun():
-        """checks to see if flrig is in the active process list"""
-        reg = "flrig"
-        found = False
-
-        for proc in psutil.process_iter():
-            if found is False:
-                if bool(re.match(reg, proc.name().lower())):
-                    found = True
-        return found
-
+    def check_port(host: str, port: int) -> bool:
+        """checks to see if a port is in use"""
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        result = sock.connect_ex((host,port))
+        if result == 0:
+            return True
+        else:
+            return False
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
