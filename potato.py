@@ -12,8 +12,6 @@ import os
 import logging
 from datetime import datetime, timezone
 from json import loads
-import re
-import psutil
 from PyQt5 import QtCore, QtWidgets, uic
 from PyQt5.QtCore import QDir
 from PyQt5.QtGui import QFontDatabase, QBrush, QColor
@@ -83,16 +81,28 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def __init__(self, parent=None):
         """Initialize class variables"""
-        if self.check_port(SERVER_ADDRESS_FLRIG.split(":")[0], int(SERVER_ADDRESS_FLRIG.split(":")[1])) is True:
+        if (
+            self.check_port(
+                SERVER_ADDRESS_FLRIG.split(":")[0],
+                int(SERVER_ADDRESS_FLRIG.split(":")[1]),
+            )
+            is True
+        ):
             local_flrig = True
         else:
             local_flrig = False
-        
-        if self.check_port(SERVER_ADDRESS_RIGCTLD.split(":")[0], int(SERVER_ADDRESS_RIGCTLD.split(":")[1])) is True:
+
+        if (
+            self.check_port(
+                SERVER_ADDRESS_RIGCTLD.split(":")[0],
+                int(SERVER_ADDRESS_RIGCTLD.split(":")[1]),
+            )
+            is True
+        ):
             local_rigctld = True
         else:
             local_rigctld = False
-        
+
         super().__init__(parent)
         uic.loadUi(self.relpath("dialog.ui"), self)
         if local_flrig is True or local_rigctld is True:
@@ -198,17 +208,24 @@ class MainWindow(QtWidgets.QMainWindow):
                             QtCore.Qt.MatchFlag.MatchContains,  # pylint: disable=no-member
                         )
                         founditem[0].setBackground(QBrush(QColor.fromRgb(0, 128, 0)))
-    
+
     def setfreq_rigctl(self, mode, freq):
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # Create a socket (SOCK_STREAM means a TCP socket)
-        sock.connect((SERVER_ADDRESS_RIGCTLD.split(":")[0], int(SERVER_ADDRESS_RIGCTLD.split(":")[1])))
-        
+        sock = socket.socket(
+            socket.AF_INET, socket.SOCK_STREAM
+        )  # Create a socket (SOCK_STREAM means a TCP socket)
+        sock.connect(
+            (
+                SERVER_ADDRESS_RIGCTLD.split(":")[0],
+                int(SERVER_ADDRESS_RIGCTLD.split(":")[1]),
+            )
+        )
+
         build_msg = f"M {mode} 0\n" + f"F {freq}\n"
-        MESSAGE = bytes(build_msg, 'utf-8')
+        MESSAGE = bytes(build_msg, "utf-8")
         sock.sendall(MESSAGE)
         # Look for the response
         amount_received = 0
-        amount_expected = 7 #len(message)
+        amount_expected = 7  # len(message)
         while amount_received < amount_expected:
             data = sock.recv(16)
             amount_received += len(data)
@@ -233,12 +250,24 @@ class MainWindow(QtWidgets.QMainWindow):
             elif mode == "CW":
                 mode = "CW"
             else:
-                mode = "USB" # default to USB for digital modes
+                mode = "USB"  # default to USB for digital modes
 
-            if self.check_port(SERVER_ADDRESS_FLRIG.split(":")[0], int(SERVER_ADDRESS_FLRIG.split(":")[1])) is True:
+            if (
+                self.check_port(
+                    SERVER_ADDRESS_FLRIG.split(":")[0],
+                    int(SERVER_ADDRESS_FLRIG.split(":")[1]),
+                )
+                is True
+            ):
                 self.server_flrig.rig.set_mode(mode)
                 self.server_flrig.rig.set_frequency(float(freq))
-            elif self.check_port(SERVER_ADDRESS_RIGCTLD.split(":")[0], int(SERVER_ADDRESS_RIGCTLD.split(":")[1])) is True:
+            elif (
+                self.check_port(
+                    SERVER_ADDRESS_RIGCTLD.split(":")[0],
+                    int(SERVER_ADDRESS_RIGCTLD.split(":")[1]),
+                )
+                is True
+            ):
                 self.setfreq_rigctl(mode, str(int(freq)))
             else:
                 print("ERROR: no rig control found!!")
@@ -290,16 +319,17 @@ class MainWindow(QtWidgets.QMainWindow):
                 return "2"
         else:
             return "0"
-        
+
     @staticmethod
     def check_port(host: str, port: int) -> bool:
         """checks to see if a port is in use"""
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        result = sock.connect_ex((host,port))
+        result = sock.connect_ex((host, port))
         if result == 0:
             return True
         else:
             return False
+
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
