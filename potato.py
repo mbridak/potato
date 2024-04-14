@@ -128,9 +128,20 @@ class MainWindow(QtWidgets.QMainWindow):
         """Display spots in a list"""
         self.listWidget.clear()
         for i in self.spots:
+            """Filter out FT modes if -FT* is selected"""
             mode_selection = self.comboBox_mode.currentText()
             if mode_selection == "-FT*" and i["mode"][:2] == "FT":
                 continue
+            """Filter spots locationDesc that match the txtFilter inpu when not blank"""
+            usr_filter = self.txtFilter.text()
+            if usr_filter != "":
+                if usr_filter[0] == "-":
+                    """if the filter is anywhere in the locationDesc then exclude the string"""
+                    if usr_filter[1:].lower() in i["locationDesc"].lower():
+                        continue
+                else:
+                    if usr_filter.lower() not in i["locationDesc"].lower():
+                        continue
             if (
                 mode_selection == "All"
                 or mode_selection == "-FT*"

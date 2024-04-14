@@ -5,6 +5,10 @@
 <img src="https://github.com/mbridak/potato/raw/main/pic/potato.png" width="100"/>
 Pulls latest POTA spots. Displays them in a compact interface. If you have an instance of `flrig` running, when you click on a spot your radio will automatically tune to the spotted frequency and change modes to match the spot.   Filter output to band and or mode. If you double click on a spot(s), spots from that activator will be highlighted green, and be added to the clipboard. You can use this keep track of who you have worked. Activators can be toggled off again by double clicking the activator a second time.
 
+<BR>
+
+- To filter for the actavators location, entering `US-WA` for example will show only the parks in US Washington State. To exclude `-US-WA` will exclude all parks in US Washington State. the presence of the first charcter `-` negates the patteren.
+
 ## Changes since 22.2.19 Instant Mashed
 
 Added command line option to specify flrig server address:port.
