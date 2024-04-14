@@ -161,7 +161,8 @@ class MainWindow(QtWidgets.QMainWindow):
                         f"{freq.rjust(9)} "
                         f"{i['mode'].ljust(5)} "
                         f"{i['grid6'].ljust(7)} "
-                        f"{i['locationDesc'].ljust(7)}"
+                        f"{i['locationDesc'].ljust(7)} "
+                        f"{i['comments']}"
                     )
                     self.listWidget.addItem(spot)
                     if spot[5:] == self.lastclicked[5:]:
