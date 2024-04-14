@@ -195,6 +195,12 @@ color: rgb(211, 215, 207);</string>
           <property name="toolTip">
            <string extracomment="Location Filter"/>
           </property>
+          <property name="styleSheet">
+           <string notr="true">border: 1px solid grey;</string>
+          </property>
+          <property name="placeholderText">
+           <string>Enter Filter</string>
+          </property>
          </widget>
         </item>
         <item>
