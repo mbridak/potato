@@ -197,7 +197,8 @@ class MainWindow(QtWidgets.QMainWindow):
                         f"{i['comments']}"
                     )
                     self.listWidget.addItem(spot)
-                    if spot[5:] == self.lastclicked[5:]:
+
+                    if spot[5:35] == self.lastclicked[5:35]:
                         founditem = self.listWidget.findItems(
                             spot[5:],
                             QtCore.Qt.MatchFlag.MatchContains,  # pylint: disable=no-member
