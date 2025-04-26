@@ -162,7 +162,7 @@ class MainWindow(QtWidgets.QMainWindow):
         for i in self.spots:
             """Filter out FT modes if -FT* is selected"""
             mode_selection = self.comboBox_mode.currentText()
-            if mode_selection == "-FT*" and i["mode"][:2] == "FT":
+            if mode_selection == "-FT*" and "FT" in i["mode"]:
                 continue
             """Filter spots locationDesc that match the txtFilter inpu when not blank"""
             usr_filter = self.txtFilter.text()
