@@ -148,7 +148,11 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Find the band with the highest count
         most_popular_band = max(band_counts, key=band_counts.get)
-        self.label_popular_band.setText(f"Most Popular Band: {most_popular_band}")
+
+        # Get total number of spots
+        total_spots = len(self.spots)
+    
+        self.label_popular_band.setText(f"Total Spots: {total_spots} | Most Popular Band: {most_popular_band}")
 
     def getspots(self):
         """Gets activator spots from pota.app"""
