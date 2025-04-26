@@ -217,6 +217,9 @@ class MainWindow(QtWidgets.QMainWindow):
                         f"{i['locationDesc'].ljust(7)} "
                         f"{i['comments']}"
                     )
+                    if "qrt" in i["comments"].lower():
+                        # if spot comments has QRT skip
+                        continue
                     self.listWidget.addItem(spot)
 
                     if spot[5:35] == self.lastclicked[5:35]:
