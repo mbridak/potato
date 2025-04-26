@@ -132,6 +132,27 @@ class MainWindow(QtWidgets.QMainWindow):
     def potasort(self, element):
         """Sort list or dictionary items"""
         return element["spotId"]
+    
+    def display_most_popular_band(self):
+        """Calculate and display the most popular band"""
+        if not self.spots:
+            self.label_popular_band.setText("Most Popular Band: None")
+            return
+
+        band_counts = {}
+        for spot in self.spots:
+            band = self.getband(spot["frequency"].split(".")[0])
+            if band not in band_counts:
+                band_counts[band] = 0
+            band_counts[band] += 1
+
+        # Find the band with the highest count
+        most_popular_band = max(band_counts, key=band_counts.get)
+
+        # Get total number of spots
+        total_spots = len(self.spots)
+    
+        self.label_popular_band.setText(f"Total Spots: {total_spots} | Most Popular Band: {most_popular_band}")
 
     def getspots(self):
         """Gets activator spots from pota.app"""
@@ -162,9 +183,9 @@ class MainWindow(QtWidgets.QMainWindow):
         for i in self.spots:
             """Filter out FT modes if -FT* is selected"""
             mode_selection = self.comboBox_mode.currentText()
-            if mode_selection == "-FT*" and i["mode"][:2] == "FT":
+            if mode_selection == "-FT*" and "FT" in i["mode"]:
                 continue
-            """Filter spots locationDesc that match the txtFilter inpu when not blank"""
+            """Filter spots locationDesc that match the txtFilter input when not blank"""
             usr_filter = self.txtFilter.text()
             if usr_filter != "":
                 if usr_filter[0] == "-":
@@ -210,7 +231,10 @@ class MainWindow(QtWidgets.QMainWindow):
                             QtCore.Qt.MatchFlag.MatchContains,  # pylint: disable=no-member
                         )
                         founditem[0].setBackground(QBrush(QColor.fromRgb(0, 128, 0)))
-
+                # Display the most popular band
+                self.display_most_popular_band()
+    
+    
     def setfreq_rigctl(self, mode, freq):
         sock = socket.socket(
             socket.AF_INET, socket.SOCK_STREAM
