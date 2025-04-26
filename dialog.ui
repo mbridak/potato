@@ -58,6 +58,13 @@ color: rgb(211, 215, 207);</string>
          </spacer>
         </item>
         <item>
+         <widget class="QLabel" name="label_popular_band">
+          <property name="text">
+           <string>TextLabel</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QComboBox" name="comboBox_band">
           <property name="font">
            <font>
